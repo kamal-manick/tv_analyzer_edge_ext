@@ -1,0 +1,32 @@
+{
+  "manifest_version": 3,
+  "name": "TradingView Analyzer",
+  "version": "0.2.0",
+  "description": "Captures TradingView qsd quote data, maintains a symbol snapshot, and streams every qsd packet to localhost.",
+  "permissions": ["storage", "tabs"],
+  "host_permissions": ["https://www.tradingview.com/*", "https://data.tradingview.com/*"],
+  "content_security_policy": {
+    "extension_pages": "script-src 'self'; object-src 'self'; connect-src 'self' ws://127.0.0.1:8765"
+  },
+  "action": {
+    "default_title": "TradingView Analyzer",
+    "default_popup": "popup.html"
+  },
+  "background": {
+    "service_worker": "background.js"
+  },
+  "content_scripts": [
+    {
+      "matches": ["https://www.tradingview.com/*"],
+      "js": ["bridge.js"],
+      "run_at": "document_start",
+      "world": "ISOLATED"
+    },
+    {
+      "matches": ["https://www.tradingview.com/*"],
+      "js": ["interceptor.js"],
+      "run_at": "document_start",
+      "world": "MAIN"
+    }
+  ]
+}
